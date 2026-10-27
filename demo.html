@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STAR DRIVER 2.0 | Demo comercial</title>
+<meta name="description" content="Prototipo demostrativo de inscripciones, reservas y panel de administración STAR DRIVER. Sin pagos reales.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--bg:#f6f7f9;--ink:#101820;--red:#e92730;--line:#e5e8ec;--muted:#65717f;--green:#047857;--lav:#f4eeff}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Inter,Arial,sans-serif;color:var(--ink);font-size:14px}
+button,input,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+.shell{max-width:1220px;margin:auto;padding:22px 26px 75px}
+.topbar{background:#0b141b;color:white}.topinner{max-width:1220px;margin:auto;min-height:76px;padding:13px 26px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:11px}.mark{height:44px;width:44px;border:3px solid white;border-radius:50%;display:grid;place-items:center;font-size:26px}
+.brand strong{font:800 31px/.9 'Barlow Condensed',sans-serif;letter-spacing:.4px}.brand small{display:block;font:600 9px Inter,sans-serif;letter-spacing:2px;margin-top:3px}.top-actions{display:flex;gap:16px;align-items:center}.top-actions a{font-weight:600;font-size:13px}.top-actions a:hover{text-decoration:underline}
+.eyebrow{color:var(--red);letter-spacing:2px;text-transform:uppercase;font-size:11px;font-weight:800}
+.pill{border-radius:30px;padding:7px 12px;border:1px solid #fecdd3;background:#fff2f2;color:#af1e29;font-weight:800;font-size:11px;white-space:nowrap}
+.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:30px;align-items:center;padding:43px 0 33px}
+.hero h1{font:800 clamp(38px,5vw,65px)/.99 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.3px;margin:13px 0}
+.hero h1 span{color:var(--red)}.hero p{color:#63717e;line-height:1.75;font-size:15px;max-width:640px;margin:0}
+.demo-label{border:1px solid #ffb8ba;background:#ffeced;color:#b3242a;border-radius:12px;padding:20px;line-height:1.6}
+.demo-label b{display:block;color:#8c131d;margin-bottom:6px;font-size:15px}
+.tabbar{display:flex;gap:6px;border-bottom:1px solid var(--line);padding-bottom:0;margin-bottom:23px}
+.tabbar button{background:transparent;border:0;padding:14px 18px 15px;font-weight:700;color:#6b7280;border-bottom:3px solid transparent}
+.tabbar button[aria-selected=true]{color:var(--red);border-bottom-color:var(--red)}
+.view{display:none}.view.active{display:block}
+.card{background:#fff;border:1px solid var(--line);box-shadow:0 7px 28px #14212f08;border-radius:16px}
+.booking-grid{display:grid;grid-template-columns:1.5fr .8fr;gap:23px;align-items:start}
+.section-header{padding:23px 26px 8px}.section-header h2{font:800 29px 'Barlow Condensed',sans-serif;margin:0 0 5px}.section-header p{font-size:13px;color:#677381;line-height:1.6;margin:0}
+.steps{display:flex;align-items:center;gap:8px;margin:20px 26px 22px}.step{display:flex;align-items:center;gap:7px;font-weight:700;color:#96a0ac;font-size:12px}.step span{display:grid;place-items:center;height:26px;width:26px;border-radius:50%;border:1px solid #c7ccd3;font-size:12px}.step.active{color:var(--red)}.step.active span{background:var(--red);border-color:var(--red);color:white}.connector{height:1px;width:22px;background:#d9dde3}
+.step-content{padding:0 26px 27px}.field-label{display:block;font-weight:700;font-size:12px;margin-bottom:10px}
+.services{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:25px}
+.service{border:1.5px solid #e5e9ef;background:white;border-radius:12px;padding:16px;text-align:left;display:flex;flex-direction:column;gap:9px;min-height:114px}
+.service b{font:800 21px 'Barlow Condensed',sans-serif}.service small{font-size:11px;color:#697586;line-height:1.4}.service.selected{border-color:var(--red);background:#fff7f7;box-shadow:0 0 0 2px #f9d7d7}.service .emoji{font-size:22px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-row>div{min-width:0}
+.input{display:block;padding:13px 12px;border:1px solid #d7dce3;border-radius:9px;width:100%;background:white;color:var(--ink)}
+.input:focus{outline:2px solid #e9273022;border-color:var(--red)}
+.slots{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.slot{border:1px solid #d7dce3;background:white;padding:10px 12px;border-radius:9px;font-weight:700;color:#52606d}.slot.selected{background:#161f27;color:#fff;border-color:#161f27}
+.sample{color:#89929d;font-size:11px;margin-top:8px;line-height:1.6}
+.cta{background:var(--red);border:0;color:white;font-weight:800;padding:14px 20px;border-radius:11px}.cta:hover{background:#bf1b24}.cta:disabled{background:#abb2b9;cursor:not-allowed}
+.cta.dark{background:var(--ink)}.cta.ghost{background:#fff;border:1px solid #dadfe7;color:#1a2634}.cta.secondary{background:#eef2f6;color:#293440}.cta.full{width:100%}.action-row{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.summary{padding:23px;position:sticky;top:20px}.summary h3{font:800 26px 'Barlow Condensed',sans-serif;margin:0 0 18px}
+.line{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:13px 0;color:#667383;font-size:12px}
+.line b{color:#1b2936;text-align:right;font-size:13px}.total{display:flex;justify-content:space-between;align-items:center;padding:19px 0 10px;font-weight:800}.total strong{font-size:24px}
+.summary-note{background:#f7f8f9;padding:13px;border-radius:9px;color:#677381;font-size:11px;line-height:1.7}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.pay-method{border:1.5px solid #d9dfe7;border-radius:10px;padding:15px 6px;background:white;font-weight:800;min-height:72px}
+.pay-method.selected{border-color:var(--red);background:#fff4f5;color:#b9222a}
+.paybox{background:#f6f8fa;border:1px dashed #b5bdc6;border-radius:15px;margin-top:17px;padding:24px;text-align:center;color:#263440}
+.paybox .fakeqr{width:128px;height:128px;background:repeating-linear-gradient(0deg,#1b2530 0 6px,#fff 6px 11px);margin:0 auto 10px;display:grid;place-items:center;border:8px solid white;border-radius:8px;opacity:.6}
+.fakeqr span{background:white;color:#8b151c;font-weight:900;font-size:11px;padding:7px;transform:rotate(-9deg)}
+.paybox p{font-size:12px;line-height:1.6;margin:6px 0 0}
+.success{padding:20px 18px;text-align:center}.success-icon{font-size:46px;margin-bottom:6px}.success h3{font:800 32px 'Barlow Condensed',sans-serif;margin:0 0 5px}.success p{color:#627182;line-height:1.6}.receipt{background:#f3f5f7;border-radius:9px;padding:14px;text-align:left;max-width:460px;margin:15px auto}
+.admin-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:20px}.admin-head h2{margin:0;font:800 30px 'Barlow Condensed',sans-serif}.admin-head p{margin:7px 0 0;color:#75808b;font-size:12px}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}
+.metric{padding:20px}.metric label{font-size:11px;color:#697584;font-weight:700;display:block}.metric strong{display:block;font:800 36px 'Barlow Condensed',sans-serif;margin:9px 0 5px}.metric small{color:#74808d;font-size:11px}
+.admin-main{display:grid;grid-template-columns:1.45fr .7fr;gap:20px}.table-card{overflow:hidden}.table-card h3,.upcoming h3{font:800 25px 'Barlow Condensed',sans-serif;margin:0;padding:20px 20px 16px}
+table{width:100%;border-collapse:collapse;text-align:left}th{background:#f7f8fa;color:#697584;font-size:11px;font-weight:700}th,td{padding:14px 18px;border-top:1px solid #edf0f2}td{font-size:12px}td b{font-size:12px}
+.state{padding:5px 9px;border-radius:15px;font-size:10px;font-weight:800;display:inline-block;background:#dcfce7;color:#166534}.state.pending{background:#fff4d8;color:#a16207}.state.new{background:#ede9fe;color:#6d28d9}
+.upcoming{padding-bottom:17px}.classitem{margin:0 18px;padding:14px 0;border-top:1px solid #e8ecf0;display:flex;align-items:center;gap:12px}.classitem .date{border-radius:8px;padding:10px;background:#fff0f0;color:#be2026;font-weight:800;text-align:center;min-width:57px;font-size:11px}.classitem strong{font-size:12px;display:block;margin-bottom:6px}.classitem small{color:#6d7886;font-size:11px}
+.footer{margin:45px 0 0;padding-top:20px;border-top:1px solid #e3e7ed;color:#6b7280;text-align:center;font-size:11px}
+.hidden{display:none!important}
+@media(max-width:850px){.booking-grid,.admin-main,.hero{grid-template-columns:1fr}.hero{padding:25px 0}.metrics{grid-template-columns:1fr 1fr}.summary{position:static}.demo-label{max-width:600px}.services{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.shell{padding:15px 14px 50px}.topinner{padding:10px 15px}.top-actions{gap:9px}.top-actions a{font-size:11px}.brand strong{font-size:23px}.mark{width:34px;height:34px;font-size:20px}.brand small{font-size:6px}.hero h1{font-size:44px}.hero p{font-size:13px}.section-header{padding:19px 17px 5px}.steps{margin:14px 17px}.step-content{padding:5px 17px 20px}.services{gap:8px}.service{padding:10px;min-height:115px}.service b{font-size:19px}.form-row,.metrics{grid-template-columns:1fr 1fr;gap:8px}.input{padding:11px 7px;font-size:13px}.tabbar button{font-size:12px;padding:12px 10px}.metrics{gap:8px}.metric{padding:14px}.metric strong{font-size:30px}.table-card{overflow:auto}td,th{white-space:nowrap;padding:12px}.pay-method{padding:10px 3px;font-size:11px}.top-actions a:first-child{display:none}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topinner">
+<a href="/" class="brand"><span class="mark">✦</span><span><strong>STAR DRIVER</strong><small>ESCUELA DE CONDUCTORES</small></span></a>
+<div class="top-actions"><span class="pill">● DEMO · SIN PAGOS REALES</span><a href="/">Volver al inicio ↗</a></div>
+</div></header>
+<div class="shell">
+<section class="hero"><div><div class="eyebrow">Propuesta comercial · versión demostrativa</div><h1>UNA ESCUELA DE MANEJO.<br><span>TODO BAJO CONTROL.</span></h1><p>Un recorrido de prueba por el sistema de inscripciones, reservas, pagos y administración pensado para STAR DRIVER. Aquí puedes simular un alumno nuevo sin enviar datos a ningún servidor.</p></div>
+<div class="demo-label"><b>⚠️ Prototipo para presentación</b>Los alumnos, servicios, precios y cifras de este módulo son ilustrativos. No hay cuentas de pago conectadas, no se crean reservas reales y la información no se almacena ni se envía.</div></section>
+<div role="tablist" class="tabbar"><button type="button" id="tabBooking" role="tab" aria-selected="true" aria-controls="bookingView">1. Vista del alumno</button><button type="button" id="tabAdmin" role="tab" aria-selected="false" aria-controls="adminView">2. Panel del administrador</button></div>
+<section class="view active" id="bookingView" role="tabpanel" aria-labelledby="tabBooking">
+<div class="booking-grid">
+<div class="card">
+<div class="section-header"><h2>RESERVA TU CLASE</h2><p>Simula cómo se matricularía un alumno sin usar formularios externos ni enviar capturas de pago.</p></div>
+<div class="steps"><div class="step active" data-step="1"><span>1</span>Servicio</div><div class="connector"></div><div class="step" data-step="2"><span>2</span>Fecha</div><div class="connector"></div><div class="step" data-step="3"><span>3</span>Pago</div></div>
+<div class="step-content" id="stepOne">
+<label class="field-label">Selecciona un servicio</label>
+<div class="services" id="serviceList">
+<button type="button" class="service selected" data-id="auto"><span class="emoji">🚘</span><b>CLASE DE AUTO</b><small>Práctica individual · S/ 60 (ejemplo)</small></button>
+<button type="button" class="service" data-id="moto"><span class="emoji">🏍️</span><b>CLASE DE MOTO</b><small>Práctica individual · S/ 45 (ejemplo)</small></button>
+<button type="button" class="service" data-id="medico"><span class="emoji">🩺</span><b>EXAMEN MÉDICO</b><small>Solicitud de cita · S/ 80 (ejemplo)</small></button>
+<button type="button" class="service" data-id="revalidacion"><span class="emoji">🪪</span><b>REVALIDACIÓN</b><small>Consulta del trámite · S/ 50 (ejemplo)</small></button>
+</div>
+<label class="field-label">Nombre de ejemplo (opcional)</label><input class="input" id="studentName" maxlength="45" placeholder="Alumno de prueba" autocomplete="off">
+<div class="sample">No introduzcas datos personales reales en esta demostración. No guardamos esta información.</div>
+<div class="action-row"><button type="button" class="cta" id="toDate">Continuar a horarios →</button></div></div>
+<div class="step-content hidden" id="stepTwo">
+<div class="form-row"><div><label class="field-label" for="dateInput">Fecha de prueba</label><input type="date" id="dateInput" class="input"></div><div><label class="field-label" for="locationInput">Sede</label><select class="input" id="locationInput"><option>Los Olivos · Naranjal 1357</option></select></div></div>
+<label class="field-label" style="margin-top:22px">Horario demostrativo</label>
+<div class="slots" id="timeSlots"><button type="button" class="slot selected" data-time="09:00">09:00</button><button type="button" class="slot" data-time="11:00">11:00</button><button type="button" class="slot" data-time="15:00">15:00</button><button type="button" class="slot" data-time="17:00">17:00</button></div>
+<div class="sample">Los horarios son de ejemplo y no representan la disponibilidad real de profesores o vehículos.</div>
+<div class="action-row"><button type="button" class="cta ghost" id="backToService">← Volver</button><button type="button" class="cta" id="toPayment">Continuar al pago →</button></div></div>
+<div class="step-content hidden" id="stepThree">
+<label class="field-label">¿Cómo prefieres pagar?</label>
+<div class="pay-methods" id="paymentMethods"><button class="pay-method selected" data-method="Yape" type="button">🟣 Yape</button><button class="pay-method" data-method="Plin" type="button">🔵 Plin</button><button class="pay-method" data-method="Tarjeta" type="button">💳 Tarjeta</button></div>
+<div class="paybox"><div class="fakeqr"><span>DEMO</span></div><b id="payTitle">Ejemplo de pantalla de pago con Yape</b><p>No es un QR válido y no permite transferir dinero. Una integración comercial utilizaría una pasarela de pagos y su confirmación segura.</p></div>
+<div class="action-row"><button type="button" class="cta ghost" id="backToDate">← Volver</button><button type="button" class="cta" id="simulatePayment">Simular pago aprobado ✓</button></div>
+</div>
+<div class="step-content hidden" id="stepSuccess"><div class="success"><div class="success-icon">✅</div><h3>¡INSCRIPCIÓN SIMULADA!</h3><p>Así recibiría el alumno la confirmación después de que un proveedor de pagos verificara la transacción.</p>
+<div class="receipt" id="receiptText"></div><div class="sample">No se realizó ningún cobro ni se generó una reserva real.</div><div class="action-row" style="justify-content:center"><button class="cta secondary" id="restart" type="button">Probar otra inscripción</button><button class="cta dark" id="goAdmin" type="button">Ver panel administrativo →</button></div></div></div>
+</div>
+<aside class="card summary"><h3>RESUMEN DE RESERVA</h3>
+<div class="line"><span>Servicio</span><b id="sumService">Clase de auto</b></div><div class="line"><span>Alumno</span><b id="sumStudent">Alumno de prueba</b></div><div class="line"><span>Fecha</span><b id="sumDate">Por seleccionar</b></div><div class="line"><span>Hora</span><b id="sumTime">Por seleccionar</b></div>
+<div class="total"><span>Precio de ejemplo</span><strong id="sumPrice">S/ 60</strong></div>
+<div class="summary-note">🔒 En producción, el importe debe verificarse en el servidor. Nunca se debe confirmar una matrícula por una captura de Yape ni por el botón de esta demo.</div></aside>
+</div></section>
+<section class="view" id="adminView" role="tabpanel" aria-labelledby="tabAdmin">
+<div class="admin-head"><div><div class="eyebrow">Visibilidad del negocio</div><h2>PANEL ADMINISTRATIVO</h2><p>Cifras completamente ficticias: muestran lo que podría ver el propietario.</p></div><span class="pill">MODO DEMOSTRACIÓN</span></div>
+<div class="metrics"><div class="card metric"><label>Matrículas del mes</label><strong id="metricStudents">24</strong><small>Alumnos de ejemplo</small></div><div class="card metric"><label>Pagos registrados</label><strong id="metricPayments">18</strong><small>Operaciones simuladas</small></div><div class="card metric"><label>Reservas activas</label><strong id="metricBookings">16</strong><small>Horarios de ejemplo</small></div><div class="card metric"><label>Ingreso registrado</label><strong id="metricIncome">S/ 2,460</strong><small>Monto ficticio</small></div></div>
+<div class="admin-main"><div class="card table-card"><h3>ÚLTIMAS INSCRIPCIONES</h3><table><thead><tr><th>Alumno</th><th>Servicio</th><th>Pago</th><th>Estado</th></tr></thead>
+<tbody id="studentsTable"><tr><td><b>María T. (ejemplo)</b></td><td>Clase de auto</td><td>S/ 60</td><td><span class="state">Confirmada</span></td></tr>
+<tr><td><b>José R. (ejemplo)</b></td><td>Clase de moto</td><td>S/ 45</td><td><span class="state">Confirmada</span></td></tr>
+<tr><td><b>Ana M. (ejemplo)</b></td><td>Examen médico</td><td>S/ 80</td><td><span class="state pending">Pendiente</span></td></tr>
+<tr><td><b>Luis C. (ejemplo)</b></td><td>Revalidación</td><td>S/ 50</td><td><span class="state new">Por coordinar</span></td></tr></tbody>
+</table></div><div class="card upcoming"><h3>PRÓXIMAS CLASES</h3>
+<div class="classitem"><div class="date">09:00</div><div><strong>Clase de auto</strong><small>Instructor por asignar · ejemplo</small></div></div>
+<div class="classitem"><div class="date">11:00</div><div><strong>Clase de moto</strong><small>Instructor por asignar · ejemplo</small></div></div>
+<div class="classitem"><div class="date">15:00</div><div><strong>Clase de auto</strong><small>Vehículo por asignar · ejemplo</small></div></div>
+<div style="padding:15px 18px 0"><button id="adminToBooking" type="button" class="cta secondary full">+ Simular nueva matrícula</button></div>
+</div></div>
+</section>
+<div class="footer">© STAR DRIVER · Prototipo de propuesta técnica no oficial. Ningún pago, dato o matrícula se registra. <a href="/" style="text-decoration:underline">Volver a la página</a></div>
+</div>
+<script>
+(()=>{'use strict';
+const services={auto:{name:'Clase de auto',price:60},moto:{name:'Clase de moto',price:45},medico:{name:'Examen médico',price:80},revalidacion:{name:'Revalidación',price:50}};
+let s={service:'auto',time:'09:00',method:'Yape',step:1}, counts={students:24,payments:18,bookings:16,income:2460,serial:0};
+const $=x=>document.getElementById(x);
+const fmt=n=>'S/ '+Number(n).toLocaleString('es-PE');
+function chooseTab(tab){const booking=tab==='booking';$('bookingView').classList.toggle('active',booking);$('adminView').classList.toggle('active',!booking);$('tabBooking').setAttribute('aria-selected',booking);$('tabAdmin').setAttribute('aria-selected',!booking);window.scrollTo({top:120,behavior:'smooth'});}
+$('tabBooking').onclick=()=>chooseTab('booking');$('tabAdmin').onclick=()=>chooseTab('admin');$('goAdmin').onclick=()=>chooseTab('admin');$('adminToBooking').onclick=()=>chooseTab('booking');
+function valDate(){const v=$('dateInput').value;if(!v)return'Por seleccionar';const [y,m,d]=v.split('-');return d+'/'+m+'/'+y;}
+function name(){return $('studentName').value.trim().slice(0,45)||'Alumno de prueba';}
+function renderSummary(){$('sumService').textContent=services[s.service].name;$('sumStudent').textContent=name();$('sumDate').textContent=s.step>1?valDate():'Por seleccionar';$('sumTime').textContent=s.step>1?s.time:'Por seleccionar';$('sumPrice').textContent=fmt(services[s.service].price);}
+function setStep(n){s.step=n;[1,2,3].forEach((i)=>{document.querySelector('[data-step="'+i+'"]').classList.toggle('active',i<=Math.min(n,3));});$('stepOne').classList.toggle('hidden',n!==1);$('stepTwo').classList.toggle('hidden',n!==2);$('stepThree').classList.toggle('hidden',n!==3);$('stepSuccess').classList.toggle('hidden',n!==4);renderSummary();}
+document.querySelectorAll('.service').forEach(b=>b.onclick=()=>{s.service=b.dataset.id;document.querySelectorAll('.service').forEach(e=>e.classList.toggle('selected',e===b));renderSummary();});
+document.querySelectorAll('.slot').forEach(b=>b.onclick=()=>{s.time=b.dataset.time;document.querySelectorAll('.slot').forEach(e=>e.classList.toggle('selected',e===b));renderSummary()});
+document.querySelectorAll('.pay-method').forEach(b=>b.onclick=()=>{s.method=b.dataset.method;document.querySelectorAll('.pay-method').forEach(e=>e.classList.toggle('selected',e===b));$('payTitle').textContent='Ejemplo de pantalla de pago con '+s.method;});
+$('studentName').addEventListener('input',renderSummary);$('dateInput').addEventListener('input',renderSummary);
+const today=new Date();today.setHours(0,0,0,0);const tomorrow=new Date(today);tomorrow.setDate(today.getDate()+1);const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');$('dateInput').min=iso(today);$('dateInput').value=iso(tomorrow);
+$('toDate').onclick=()=>setStep(2);$('backToService').onclick=()=>setStep(1);$('toPayment').onclick=()=>{if(!$('dateInput').value){alert('Selecciona una fecha de prueba.');return;}setStep(3)};$('backToDate').onclick=()=>setStep(2);
+$('simulatePayment').onclick=()=>{counts.students++;counts.payments++;counts.bookings++;counts.income+=services[s.service].price;counts.serial++;$('metricStudents').textContent=counts.students;$('metricPayments').textContent=counts.payments;$('metricBookings').textContent=counts.bookings;$('metricIncome').textContent=fmt(counts.income);
+const code='SD-DEMO-'+String(counts.serial).padStart(4,'0');const tr=document.createElement('tr');const td=(t,tag)=>{const el=document.createElement('td');if(tag){const sp=document.createElement('span');sp.className='state';sp.textContent=t;el.appendChild(sp);}else el.textContent=t;tr.appendChild(el)};td(name()+' (demo)');td(services[s.service].name);td(fmt(services[s.service].price));td('Simulada',true);$('studentsTable').prepend(tr);
+$('receiptText').textContent='Código: '+code+'\nAlumno: '+name()+'\nServicio: '+services[s.service].name+'\nFecha: '+valDate()+' · '+s.time+'\nMedio simulado: '+s.method+'\nImporte ficticio: '+fmt(services[s.service].price);$('receiptText').style.whiteSpace='pre-line';setStep(4);};
+$('restart').onclick=()=>{s={service:'auto',time:'09:00',method:'Yape',step:1};$('studentName').value='';$('dateInput').value=iso(tomorrow);document.querySelectorAll('.service').forEach(e=>e.classList.toggle('selected',e.dataset.id==='auto'));document.querySelectorAll('.slot').forEach(e=>e.classList.toggle('selected',e.dataset.time==='09:00'));document.querySelectorAll('.pay-method').forEach(e=>e.classList.toggle('selected',e.dataset.method==='Yape'));$('payTitle').textContent='Ejemplo de pantalla de pago con Yape';setStep(1)};
+renderSummary();
+})();
+</script>
+</body></html>
